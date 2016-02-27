@@ -1,3 +1,4 @@
+//Author:Iseman Johnson
 //First Pong game
 #include <iostream>
 #include <stdlib.h> //for srand and rand
@@ -77,7 +78,7 @@ void ball_traits(sf::RectangleShape ball, sf::RectangleShape leftPaddle)
 	  {
 	    sf::Clock clock;
 	sf::Time elapsed = clock.getElapsedTime();
-	//direction = rand()% 2 + 1;
+	
 	
 	    //throw to the left
 	//lspeedX = (10 - ball.getPosition().x)/elapsed.asSeconds();
