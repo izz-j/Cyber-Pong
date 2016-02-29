@@ -83,15 +83,15 @@ void ball_traits(sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape l
 	  
     double elapsed = clock.restart().asSeconds();
     std::cout << elapsed << std::endl; 
-    while (ball.getPosition().x > 10 && ball.getPosition().y > 10)
-     {
+    //    while (ball.getPosition().x > 10 && ball.getPosition().y > 10)
+    // {
 	    moveX += velocityX  * elapsed;
 	    moveY += velocityY * elapsed;
 	    std::cout << moveX << std::endl;
 	    std::cout << moveY << std::endl;
             ball.move(moveX,  moveY);
 	    ball.setPosition(moveX, moveY);
-	  }
+	    //  }
       
 	 
 }
