@@ -1,16 +1,18 @@
 //Author:Iseman Johnson
 //First Pong game
 #include <iostream>
+#include <math.h>//for sine and cosine
 #include <stdlib.h> //for srand and rand
 #include <SFML/Graphics.hpp>
 
-void ball_traits(sf::RectangleShape ball, sf::RectangleShape leftPaddle);
+void ball_traits(sf::Clock clock, sf::RectangleShape ball, sf::RectangleShape leftPaddle);
+
 int main()
 {
   const int gameWidth = 500;
   const int gameHeight = 400;
   std::srand(time(0));
-  
+  sf::Clock clock;
   sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight), "Pong!");
   //Create left paddle (player's paddle)
   sf::RectangleShape leftPaddle(sf::Vector2f(20, 100));
@@ -39,17 +41,17 @@ int main()
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W)) && leftPaddle.getPosition().y > gameHeight - 410)
       {
 	//lets get the y axis values going up
-	std::cout << leftPaddle.getPosition().y << std::endl; 
+	std::cout << "Position: "<<  leftPaddle.getPosition().y << std::endl; 
 	leftPaddle.move(0 , -.2);
       }
 	//Down
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S)) && leftPaddle.getPosition().y < gameHeight - 100)
       {
 	//let me get the y axis values going down
-	std::cout << leftPaddle.getPosition().y << std::endl; 
+	std::cout << "Position: " << leftPaddle.getPosition().y << std::endl; 
 	leftPaddle.move(0, .2);
       }	
-	ball_traits(ball, leftPaddle);
+	ball_traits(clock, ball, leftPaddle);
 	//clear
         window.clear();
 	//draw
@@ -61,33 +63,33 @@ int main()
 
     return 0;
 }
-void ball_traits(sf::RectangleShape ball, sf::RectangleShape leftPaddle)
+void ball_traits(sf::Clock clock, sf::RectangleShape ball, sf::RectangleShape leftPaddle)
 {
-  //Physics
-	//Should be in seconds?
-	// speed = distance moved/time
-        //well if the ball is a square maybe I need to find the area? hmm
-	int ballSpeed;
-	double distanceX;
-	double distanceY;
-	double lspeedX = .2;
-	double speedY = 0.0;
+  double pi = 3.1415;
+    double ballSpeed = 30;
+    int angle = 90 * pi/180;
    
-	//space to start ball this is mostly for testing purposes
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	  {
-	    sf::Clock clock;
-	sf::Time elapsed = clock.getElapsedTime();
-	
-	
-	    //throw to the left
-	//lspeedX = (10 - ball.getPosition().x)/elapsed.asSeconds();
-	    // speedY = ball.getPosition().y/elapsed.asSeconds();
-	while (ball.getPosition().x > leftPaddle.getPosition().x)
-	  {
-	    ball.move( speedY--, speedY);
-	    std::cout <<lspeedX << std::endl;
-	    std::cout << speedY << std::endl;
-	  }
-	  }
+    //Scale X and Y will give the angle
+    double scaleX = cos(angle);
+    //std::cout << scaleX << std::endl;
+    double scaleY = sin(angle);
+    double velocityX = scaleX * ballSpeed;
+    double velocityY = scaleY * ballSpeed;
+    //take original position
+    double moveX = ball.getPosition().x;
+    double moveY = ball.getPosition().y;
+	  
+    double elapsed = clock.restart().asSeconds();
+    while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+      {
+	    moveX += velocityX  * elapsed;
+	    moveY += velocityY * elapsed;
+	    std::cout << moveX << std::endl;
+	    std::cout << moveY << std::endl;
+      
+	          ball.move(moveX,  moveY);
+		  ball.setPosition(moveX, moveY);
+      }
+      
+	 
 }
