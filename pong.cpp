@@ -5,7 +5,7 @@
 #include <stdlib.h> //for srand and rand
 #include <SFML/Graphics.hpp>
 
-void ball_traits(sf::Clock clock, sf::RectangleShape ball, sf::RectangleShape leftPaddle);
+void ball_traits(sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape leftPaddle);
 
 int main()
 {
@@ -41,14 +41,14 @@ int main()
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::W)) && leftPaddle.getPosition().y > gameHeight - 410)
       {
 	//lets get the y axis values going up
-	std::cout << "Position: "<<  leftPaddle.getPosition().y << std::endl; 
+	//std::cout << "Position: "<<  leftPaddle.getPosition().y << std::endl; 
 	leftPaddle.move(0 , -.2);
       }
 	//Down
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S)) && leftPaddle.getPosition().y < gameHeight - 100)
       {
 	//let me get the y axis values going down
-	std::cout << "Position: " << leftPaddle.getPosition().y << std::endl; 
+	//std::cout << "Position: " << leftPaddle.getPosition().y << std::endl; 
 	leftPaddle.move(0, .2);
       }	
 	ball_traits(clock, ball, leftPaddle);
@@ -63,12 +63,11 @@ int main()
 
     return 0;
 }
-void ball_traits(sf::Clock clock, sf::RectangleShape ball, sf::RectangleShape leftPaddle)
+void ball_traits(sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape leftPaddle)
 {
   double pi = 3.1415;
-    double ballSpeed = 30;
-    int angle = 90 * pi/180;
-   
+    double ballSpeed = 10;
+    int angle = 30 * pi/180;
     //Scale X and Y will give the angle
     double scaleX = cos(angle);
     //std::cout << scaleX << std::endl;
@@ -80,16 +79,16 @@ void ball_traits(sf::Clock clock, sf::RectangleShape ball, sf::RectangleShape le
     double moveY = ball.getPosition().y;
 	  
     double elapsed = clock.restart().asSeconds();
-    while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-      {
+    std::cout << elapsed << std::endl; 
+    // while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+    // {
 	    moveX += velocityX  * elapsed;
 	    moveY += velocityY * elapsed;
 	    std::cout << moveX << std::endl;
 	    std::cout << moveY << std::endl;
       
 	          ball.move(moveX,  moveY);
-		  ball.setPosition(moveX, moveY);
-      }
+		  // }
       
 	 
 }
