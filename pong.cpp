@@ -4,16 +4,18 @@
 #include <math.h>//for sine and cosine
 #include <stdlib.h> //for srand and rand
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp> 
 
 void ball_traits(sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape leftPaddle);
 
 int main()
 {
+  sf::Clock clock;
   const int gameWidth = 500;
   const int gameHeight = 400;
   std::srand(time(0));
-  sf::Clock clock;
   sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight), "Pong!");
+  window.setFramerateLimit(60); 
   //Create left paddle (player's paddle)
   sf::RectangleShape leftPaddle(sf::Vector2f(20, 100));
     leftPaddle.setFillColor(sf::Color::Green);
@@ -50,7 +52,8 @@ int main()
 	//let me get the y axis values going down
 	//std::cout << "Position: " << leftPaddle.getPosition().y << std::endl; 
 	leftPaddle.move(0, .2);
-      }	
+      }
+	//Ball Physics
 	ball_traits(clock, ball, leftPaddle);
 	//clear
         window.clear();
@@ -80,15 +83,15 @@ void ball_traits(sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape l
 	  
     double elapsed = clock.restart().asSeconds();
     std::cout << elapsed << std::endl; 
-    // while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-    // {
+    while (ball.getPosition().x > 10 && ball.getPosition().y > 10)
+     {
 	    moveX += velocityX  * elapsed;
 	    moveY += velocityY * elapsed;
 	    std::cout << moveX << std::endl;
 	    std::cout << moveY << std::endl;
-      
-	          ball.move(moveX,  moveY);
-		  // }
+            ball.move(moveX,  moveY);
+	    ball.setPosition(moveX, moveY);
+	  }
       
 	 
 }
