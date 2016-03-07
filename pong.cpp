@@ -4,18 +4,19 @@
 #include <math.h>//for sine and cosine
 #include <stdlib.h> //for srand and rand
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp> 
+#include <SFML/Window.hpp>
+#include <unistd.h>//This is to use sleep(). This is temporary and for debugging purposes
 
-void ball_traits(sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle);
+void ball_traits(sf::RenderWindow& window,sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle);
 
 int main()
 {
-  sf::Clock clock;
+ sf::Clock clock;
   const int gameWidth = 800;
   const int gameHeight = 600;
   std::srand(time(0));
   sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight), "Pong!");
-  window.setFramerateLimit(60); 
+  window.setFramerateLimit(65); 
   //Create left paddle (player's paddle)
   sf::RectangleShape leftPaddle(sf::Vector2f(20, 100));
     leftPaddle.setFillColor(sf::Color::Green);
@@ -54,7 +55,7 @@ int main()
 	leftPaddle.move(0, 10);
       }
 	//Ball Physics
-	ball_traits(clock, ball, leftPaddle, rightPaddle);
+	ball_traits(window, clock, ball, leftPaddle, rightPaddle);
 	//clear
         window.clear();
 	//draw
@@ -66,32 +67,54 @@ int main()
 
     return 0;
 }
-void ball_traits(sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle)
+void ball_traits(sf::RenderWindow& window, sf::Clock clock, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle)
 {
-  double pi = 3.1415;
-  double ballSpeed = 30;
-    //convert angle to radians 
-    int angle = 0;
+  bool countFinished = false;
+  float pi = 3.1415;
+  float ballSpeed = 1;
+    //convert angle to radians
+  int angle = 0;
       angle *= pi/180;
     //Scale X and Y will give the angle
-    double scaleX = cos(angle);
+    float scaleX = cos(angle);
     //std::cout << scaleX << std::endl;
-    double scaleY = sin(angle);
-    double velocityX = scaleX * ballSpeed;
-    double velocityY = scaleY * ballSpeed;
+    float scaleY = sin(angle);
+    float velocityX = scaleX * ballSpeed;
+    float velocityY = scaleY * ballSpeed;
     //take original position
-    double moveX = ball.getPosition().x;
-    double moveY = ball.getPosition().y;
+    float posX = ball.getPosition().x;
+    float posY = ball.getPosition().y;
 	  
-    double elapsed = clock.restart().asSeconds();
+    float elapsed = clock.restart().asSeconds();
     //std::cout << elapsed << std::endl; 
-	 moveX += velocityX  * elapsed;
-	moveY += velocityY * elapsed;
+    float moveX = velocityX  * elapsed;
+    float moveY = velocityY * elapsed;
 	//std::cout << moveX << std::endl;
 	//std::cout << moveY << std::endl;
-       //set ball's new position
-	ball.setPosition(-moveX, moveY);
+	//I think I like this better than .move()
+	ball.setPosition(posX - moveX, posY - moveY);
        //prevent the ball from going out of bounds
-       std::cout << ball.getPosition().x << std::endl;
-       
+	//std::cout << "Ball position: " <<  ball.getPosition().x << std::endl;
+       if (ball.getPosition().x < leftPaddle.getPosition().x || ball.getPosition().x > rightPaddle.getPosition().x)
+	 {
+	   //Timer here, Hold the ball for a few seconds before releasing it
+	   //ughh can't compare floats
+	   /* while (countFinished == false)
+	     {
+	       
+	       sf::Clock timer;
+	       sf::Time count;
+	        count = timer.getElapsedTime();
+	      std::cout << count.asSeconds() << std::endl;
+	      if (count.asSeconds() >= 0.1f)
+	        {
+		   countFinished = true;
+		 }
+	     }
+	       */
+	     ball.setPosition(250, 200);
+	     clock.restart().asSeconds();
+	 }
+       if (ball.getPosition().y <= 0)
+           ball.move(250, 200);
 }
