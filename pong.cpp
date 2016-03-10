@@ -7,7 +7,7 @@
 #include <SFML/Window.hpp>
 #include <unistd.h>//This is to use sleep(). This is temporary and for debugging purposes
 
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction);
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock);
 int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction);
 
 
@@ -58,7 +58,8 @@ int direction = 2;
 	leftPaddle.move(0, 10);
       }
 	//Ball Physics
-	ball_traits(ball, leftPaddle, rightPaddle, ball_collision(ball, leftPaddle, rightPaddle, direction));
+	ball_traits(ball, leftPaddle, rightPaddle, direction, clock);
+	ball_collision(ball, leftPaddle, rightPaddle, direction);
 	//clear
         window.clear();
 	//draw
@@ -70,8 +71,10 @@ int direction = 2;
 
     return 0;
 }
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction)
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock)
 {
+  //So my error was I had to add asSeconds() to make the ball go faster
+  float elapsed= clock.getElapsedTime().asSeconds();
   bool stop = true;
   float pi = 3.1415;
   float ballSpeed = 1;
@@ -84,24 +87,22 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
     float velocityX = scaleX * ballSpeed;
     float velocityY = scaleY * ballSpeed;
 
-    //so the problem was time!!! lol maybe the time was out of sync with the frame rate?
-    float moveX = velocityX ;
-      float moveY = velocityY ;
+    //so the problem was time!!! ?
+    float moveX = velocityX * elapsed;
+      float moveY = velocityY * elapsed;
 	//I changed it to .move() again. I understand it better now
       //made it negative to go in the x direction
 
-    std::cout << direction << std::endl;
+      //std::cout << direction << std::endl;
     if(direction == 1)
     {
-        ball.move(moveX, moveY);
-
+        ball.move(moveX, moveY);	
+	std::cout << elapsed << std::endl;
     }
     else if(direction == 2)
     {
-        ball.move(-moveX, moveY);
-
-    }
-
+        ball.move(-moveX , moveY);
+    } 
        //prevent the ball from going out of bounds
 	if (ball.getPosition().x < leftPaddle.getPosition().x || ball.getPosition().x > rightPaddle.getPosition().x)
 	 {
@@ -111,13 +112,11 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 	       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	        {
 		   ball.setPosition(250, 200);
+		   clock.restart();
 		   stop = false;
-
 		 }
 	     }
 	 }
-
-
 }
 int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction)
 {
