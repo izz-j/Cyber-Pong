@@ -102,6 +102,7 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
     else if(direction == 2)
     {
         ball.move(-moveX , moveY);
+	std::cout << elapsed << std::endl;
     } 
        //prevent the ball from going out of bounds
 	if (ball.getPosition().x < leftPaddle.getPosition().x || ball.getPosition().x > rightPaddle.getPosition().x)
