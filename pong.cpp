@@ -7,29 +7,32 @@
 #include <SFML/Window.hpp>
 #include <unistd.h>//This is to use sleep(). This is temporary and for debugging purposes
 
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle);
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction);
+int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction);
+
 
 int main()
 {
+int direction = 2;
  sf::Clock clock;
   const int gameWidth = 800;
   const int gameHeight = 600;
   std::srand(time(0));
   sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight), "Pong!");
-  window.setFramerateLimit(60); 
+  window.setFramerateLimit(60);
   //Create left paddle (player's paddle)
   sf::RectangleShape leftPaddle(sf::Vector2f(20, 100));
     leftPaddle.setFillColor(sf::Color::Green);
-    leftPaddle.setPosition(20, 10);
+    leftPaddle.setPosition(20, 200);
     //Create right paddle (AI)
     sf::RectangleShape rightPaddle(sf::Vector2f(20, 100));
     rightPaddle.setFillColor(sf::Color::Green);
-    rightPaddle.setPosition(760, 10);
+    rightPaddle.setPosition(760, 200);
     //Create the ball
     sf::RectangleShape ball(sf::Vector2f(20, 20));
     ball.setFillColor(sf::Color::Green);
     ball.setPosition(250, 200);
-    
+
     //This is the game loop gameplay goes in here
     while (window.isOpen())
     {
@@ -51,11 +54,11 @@ int main()
 	if ((sf::Keyboard::isKeyPressed(sf::Keyboard::S)) && leftPaddle.getPosition().y < gameHeight - 100)
       {
 	//let me get the y axis values going down
-	//std::cout << "Position: " << leftPaddle.getPosition().y << std::endl; 
+	//std::cout << "Position: " << leftPaddle.getPosition().y << std::endl;
 	leftPaddle.move(0, 10);
       }
 	//Ball Physics
-	ball_traits(ball, leftPaddle, rightPaddle);
+	ball_traits(ball, leftPaddle, rightPaddle, ball_collision(ball, leftPaddle, rightPaddle, direction));
 	//clear
         window.clear();
 	//draw
@@ -67,7 +70,7 @@ int main()
 
     return 0;
 }
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle)
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction)
 {
   bool stop = true;
   float pi = 3.1415;
@@ -80,13 +83,25 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
     float scaleY = sin(angle);
     float velocityX = scaleX * ballSpeed;
     float velocityY = scaleY * ballSpeed;
-	  
+
     //so the problem was time!!! lol maybe the time was out of sync with the frame rate?
     float moveX = velocityX ;
       float moveY = velocityY ;
 	//I changed it to .move() again. I understand it better now
       //made it negative to go in the x direction
-	ball.move(-moveX, moveY);
+
+    std::cout << direction << std::endl;
+    if(direction == 1)
+    {
+        ball.move(moveX, moveY);
+
+    }
+    else if(direction == 2)
+    {
+        ball.move(-moveX, moveY);
+
+    }
+
        //prevent the ball from going out of bounds
 	if (ball.getPosition().x < leftPaddle.getPosition().x || ball.getPosition().x > rightPaddle.getPosition().x)
 	 {
@@ -101,4 +116,22 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 		 }
 	     }
 	 }
+
+
+}
+int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction)
+{
+    if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
+    {
+        direction = 1;
+        return direction;
+    }
+    else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
+    {
+        direction = 2;
+        return direction;
+    }
+    else
+        return direction;
+
 }
