@@ -13,7 +13,7 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
 
 int main()
 {
-int direction = 2;
+int direction = -1;
  sf::Clock clock;
   const int gameWidth = 800;
   const int gameHeight = 600;
@@ -96,14 +96,14 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
       //std::cout << direction << std::endl;
     if(direction == 1)
     {
-        ball.move(moveX, moveY);	
+        ball.move(moveX, -moveY);
 	std::cout << elapsed << std::endl;
     }
-    else if(direction == 2)
+    else if(direction == -1)
     {
         ball.move(-moveX , moveY);
 	  std::cout << elapsed << std::endl;
-    } 
+    }
        //prevent the ball from going out of bounds
 	if (ball.getPosition().x < leftPaddle.getPosition().x || ball.getPosition().x > rightPaddle.getPosition().x)
 	 {
@@ -118,7 +118,7 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 		 }
 	     }
 	 }
-}
+
 int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction)
 {
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
@@ -128,7 +128,12 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     }
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
-        direction = 2;
+        direction = -1;
+        return direction;
+    }
+    else if(ball.getPosition().y < 1 || ball.getPosition().y > 580)
+    {
+        direction *= -1;
         return direction;
     }
     else
