@@ -5,6 +5,7 @@
 #include <stdlib.h> //for srand and rand
 #include <SFML/Graphics.hpp>
 
+  float pi = 3.1415;
 void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock, float& angle);
 int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle);
 
@@ -31,8 +32,8 @@ int direction = -1;
     ball.setFillColor(sf::Color::Green);
     ball.setPosition(250, 200);
     //ball initial angle
-      float pi = 3.1415;
      float angle = 0;
+     //convert to radians
       angle *= pi/180;
 
     //This is the game loop gameplay goes in here
@@ -85,8 +86,6 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
     // std::cout << angle << std::endl;
     float velocityX = scaleX * ballSpeed;
     float velocityY = scaleY * ballSpeed;
-
-    //so the problem was time!!! ?
     float moveX = velocityX;
     float moveY = velocityY;
     
@@ -98,14 +97,14 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
     if(direction == 1)
     {
 	ball.move(moveX * elapsed, moveY * elapsed);
-	std::cout << elapsed << std::endl;
+	//std::cout << elapsed << std::endl;
     }
     else if(direction == -1)
     {
-	  ball.move(-moveX * elapsed, -moveY * elapsed);
-	  std::cout << elapsed << std::endl;
+	ball.move(-moveX * elapsed, -moveY * elapsed );
+	// std::cout << elapsed << std::endl;
     }
-       //prevent the ball from going out of bounds
+       //prevent the ball from going out of  bounds passed the paddle
 	if (ball.getPosition().x < leftPaddle.getPosition().x || ball.getPosition().x > rightPaddle.getPosition().x)
 	 {
 	   //Press space bar to throw the ball again
@@ -125,15 +124,32 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 
 int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle)
 {
+    //will decide whether angle is pos or neg
+    int b = (rand() % 2 + 1);
+    if (b == 1)
+	{
+		b = -1;
+	}
+    else if (b == 2)
+	{
+		b = 1;
+	}
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
         direction = 1;
-		
+	angle = (rand() % 30 + 20);
+	angle *= b;
+	angle *= pi/180;
+	std::cout << angle * 180/pi<< std::endl;
         return direction;
     }
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
         direction = -1;
+	angle = (rand() % 30 + 20);
+	angle *= b;
+	angle *= pi/180;
+	std::cout << angle * 180/pi << std::endl;
         return direction;
     }
     else if(ball.getPosition().y <= 1)
