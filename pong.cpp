@@ -4,11 +4,9 @@
 #include <math.h>//for sine and cosine
 #include <stdlib.h> //for srand and rand
 #include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <unistd.h>//This is to use sleep(). This is temporary and for debugging purposes
 
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock);
-int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction);
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock, float& angle);
+int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle);
 
 
 int main()
@@ -32,6 +30,10 @@ int direction = -1;
     sf::RectangleShape ball(sf::Vector2f(20, 20));
     ball.setFillColor(sf::Color::Green);
     ball.setPosition(250, 200);
+    //ball initial angle
+      float pi = 3.1415;
+     float angle = 0;
+      angle *= pi/180;
 
     //This is the game loop gameplay goes in here
     while (window.isOpen())
@@ -58,8 +60,8 @@ int direction = -1;
 	leftPaddle.move(0, 10);
       }
 	//Ball Physics
-	ball_traits(ball, leftPaddle, rightPaddle, direction, clock);
-	ball_collision(ball, leftPaddle, rightPaddle, direction);
+	ball_traits(ball, leftPaddle, rightPaddle, direction, clock, angle);
+	ball_collision(ball, leftPaddle, rightPaddle, direction, angle);
 	//clear
         window.clear();
 	//draw
@@ -71,37 +73,36 @@ int direction = -1;
 
     return 0;
 }
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock)
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock, float& angle)
 {
   //So my error was I had to add asSeconds() to make the ball go faster
   float elapsed= clock.getElapsedTime().asSeconds();
   bool stop = true;
-  float pi = 3.1415;
   float ballSpeed = 1;
-    //convert angle to radians
-  float angle = 0;
-      angle *= pi/180;
     //Scale X and Y will give the angle
     float scaleX = cos(angle);
     float scaleY = sin(angle);
+    // std::cout << angle << std::endl;
     float velocityX = scaleX * ballSpeed;
     float velocityY = scaleY * ballSpeed;
 
     //so the problem was time!!! ?
-    float moveX = velocityX * elapsed;
-      float moveY = velocityY * elapsed;
-	//I changed it to .move() again. I understand it better now
-      //made it negative to go in the x direction
-
-      //std::cout << direction << std::endl;
+    float moveX = velocityX;
+    float moveY = velocityY;
+    
+    //Cap the speed by freezing time
+    if (elapsed >= 10.f)
+      {
+	elapsed = 10.f;
+      }
     if(direction == 1)
     {
-        ball.move(moveX, -moveY);
+	ball.move(moveX * elapsed, moveY * elapsed);
 	std::cout << elapsed << std::endl;
     }
     else if(direction == -1)
     {
-        ball.move(-moveX , moveY);
+	  ball.move(-moveX * elapsed, -moveY * elapsed);
 	  std::cout << elapsed << std::endl;
     }
        //prevent the ball from going out of bounds
@@ -113,17 +114,21 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 	       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	        {
 		   ball.setPosition(250, 200);
+		   angle = 0;
+		   direction = 1;
 		   clock.restart();
 		   stop = false;
 		 }
 	     }
 	 }
+}
 
-int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction)
+int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle)
 {
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
         direction = 1;
+		
         return direction;
     }
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
@@ -131,12 +136,17 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
         direction = -1;
         return direction;
     }
-    else if(ball.getPosition().y < 1 || ball.getPosition().y > 580)
+    else if(ball.getPosition().y <= 1)
     {
         direction *= -1;
         return direction;
     }
+    else if (ball.getPosition().y >= 580)
+	  {
+	    direction *= -1;
+	    return direction;
+	  }
+	    
     else
-        return direction;
-
+	  return direction;
 }
