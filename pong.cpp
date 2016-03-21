@@ -137,15 +137,14 @@ void ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
         direction = 1;
-	angle = (rand() % 30 + 25);
-
+	angle = (rand() % 35 + 30);
 	angle *= b;
 	//std::cout << angle << std::endl;
     }
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
         direction = -1;
-	angle = (rand() % 30 + 25);
+	angle = (rand() % 35 + 30);
 	angle *= b;
 	//std::cout << angle  << std:endl;
     }
@@ -158,7 +157,7 @@ void ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf
     else if (ball.getPosition().y >= 580)
 	  {
 	      //direction *= -1;
-	    angle -= 90;
+	      angle -= 90;
 	    direction *= -1;
 	    std::cout << angle << std::endl;
 	  }
@@ -173,7 +172,7 @@ void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle, int& d
     float aiSpeed = aiDistance/elapsed2;
 	    if ( rightPaddle.getPosition().y < ball.getPosition().y)
 		{
-		    rightPaddle.move(0, aiSpeed++);
+		    rightPaddle.move(0, aiSpeed);
 		}
 	    else if (rightPaddle.getPosition().y <  0)
 		{
