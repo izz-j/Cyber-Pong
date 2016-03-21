@@ -7,8 +7,8 @@
 
   float pi = 3.1415;
 void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle);
-int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle);
-/*void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& RightPaddle, sf::RectangleShape& ball, int*/ 
+void ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle);
+void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle,  int& direction, sf::Clock& clock, const int& gameHeight); 
 
 int main()
 {
@@ -18,7 +18,7 @@ int direction = -1;
   const int gameHeight = 600;
   std::srand(time(0));
   sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight), "Pong!");
-  window.setFramerateLimit(60);
+  window.setFramerateLimit(65);
   //Create left paddle (player's paddle)
   sf::RectangleShape leftPaddle(sf::Vector2f(20, 100));
     leftPaddle.setFillColor(sf::Color::Green);
@@ -61,6 +61,7 @@ int direction = -1;
 	//Ball Physics
 	ball_traits(ball, leftPaddle, rightPaddle, direction, clock, angle);
 	ball_collision(ball, leftPaddle, rightPaddle, direction, angle);
+	ai_paddle(ball, rightPaddle,  direction, clock, gameHeight);
 	//clear
         window.clear();
 	//draw
@@ -110,6 +111,8 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 	       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	        {
 		   ball.setPosition(250, 200);
+		   leftPaddle.setPosition(20, 200);
+		   rightPaddle.setPosition(760,  200);
 		   angle = 0;
 		   direction = 1;
 		   clock.restart();
@@ -119,7 +122,7 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 	 }
 }
 
-int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle)
+void ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle)
 {
     //will decide whether angle is pos or neg
     int b = (rand() % 2 + 1);
@@ -134,32 +137,56 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
         direction = 1;
-	angle = (rand() % 30 + 27);
+	angle = (rand() % 30 + 25);
+
 	angle *= b;
-	std::cout << angle << std::endl;
-        return direction;
+	//std::cout << angle << std::endl;
     }
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
         direction = -1;
-	angle = (rand() % 30 + 27);
+	angle = (rand() % 30 + 25);
 	angle *= b;
-	std::cout << angle  << std::endl;
-        return direction;
+	//std::cout << angle  << std:endl;
     }
     else if(ball.getPosition().y <= 1)
     {
-        direction *= -1;
 	angle -= 90;
-        return direction;
+	direction *= -1;
+	std::cout << angle << std::endl;
     }
     else if (ball.getPosition().y >= 580)
 	  {
-	    direction *= -1;
+	      //direction *= -1;
 	    angle -= 90;
-	    return direction;
+	    direction *= -1;
+	    std::cout << angle << std::endl;
 	  }
-	    
-    else
-	  return direction;
+}
+void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, const int& gameHeight)
+{
+    float aiDistance = 30;
+    float elapsed2 = clock.getElapsedTime().asSeconds();
+    //cap ai speed
+    if ( elapsed2 == 15.f)
+	elapsed2 = 15.f;
+    float aiSpeed = aiDistance/elapsed2;
+	    if ( rightPaddle.getPosition().y < ball.getPosition().y)
+		{
+		    rightPaddle.move(0, aiSpeed++);
+		}
+	    else if (rightPaddle.getPosition().y <  0)
+		{
+		    rightPaddle.move(0, aiSpeed);
+		}
+	    else if (rightPaddle.getPosition().y  > ball.getPosition().y)
+		{
+		    rightPaddle.move(0, -aiSpeed);
+		}
+	    else if (rightPaddle.getPosition().y > gameHeight - 100)
+		{
+		    rightPaddle.move(0, -aiSpeed);
+		}
+	    //std::cout << rightPaddle.getPosition().y << std::endl;
+	
 }
