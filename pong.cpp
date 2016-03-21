@@ -1,4 +1,4 @@
-//Author:Iseman Johnson
+//Authors: Iseman Johnson 
 //First Pong game
 #include <iostream>
 #include <math.h>//for sine and cosine
@@ -6,9 +6,9 @@
 #include <SFML/Graphics.hpp>
 
   float pi = 3.1415;
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock, float& angle);
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle);
 int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle);
-
+/*void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& RightPaddle, sf::RectangleShape& ball, int*/ 
 
 int main()
 {
@@ -72,7 +72,7 @@ int direction = -1;
 
     return 0;
 }
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int direction, sf::Clock& clock, float& angle)
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle)
 {
   //So my error was I had to add asSeconds() to make the ball go faster
   float elapsed= clock.getElapsedTime().asSeconds();
@@ -134,7 +134,7 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
         direction = 1;
-	angle = (rand() % 30 + 25);
+	angle = (rand() % 30 + 27);
 	angle *= b;
 	std::cout << angle << std::endl;
         return direction;
@@ -142,7 +142,7 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
         direction = -1;
-	angle = (rand() % 30 + 25);
+	angle = (rand() % 30 + 27);
 	angle *= b;
 	std::cout << angle  << std::endl;
         return direction;
