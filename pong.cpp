@@ -134,7 +134,7 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
         direction = 1;
-	angle = (rand() % 33 + 30);
+	angle = (rand() % 30 + 25);
 	angle *= b;
 	std::cout << angle << std::endl;
         return direction;
@@ -142,7 +142,7 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
         direction = -1;
-	angle = (rand() % 33+ 30);
+	angle = (rand() % 30 + 25);
 	angle *= b;
 	std::cout << angle  << std::endl;
         return direction;
