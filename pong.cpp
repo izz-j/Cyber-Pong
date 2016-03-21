@@ -33,8 +33,6 @@ int direction = -1;
     ball.setPosition(250, 200);
     //ball initial angle
      float angle = 0;
-     //convert to radians
-      angle *= pi/180;
 
     //This is the game loop gameplay goes in here
     while (window.isOpen())
@@ -80,9 +78,8 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
   float elapsed= clock.getElapsedTime().asSeconds();
   bool stop = true;
   float ballSpeed = 1;
-    //Scale X and Y will give the angle
-    float scaleX = cos(angle);
-    float scaleY = sin(angle);
+    float scaleX = cos(angle * pi/180);
+    float scaleY = sin(angle * pi/180);
     // std::cout << angle << std::endl;
     float velocityX = scaleX * ballSpeed;
     float velocityY = scaleY * ballSpeed;
@@ -137,29 +134,29 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
         direction = 1;
-	angle = (rand() % 30 + 20);
+	angle = (rand() % 33 + 30);
 	angle *= b;
-	angle *= pi/180;
-	std::cout << angle * 180/pi<< std::endl;
+	std::cout << angle << std::endl;
         return direction;
     }
     else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
         direction = -1;
-	angle = (rand() % 30 + 20);
+	angle = (rand() % 33+ 30);
 	angle *= b;
-	angle *= pi/180;
-	std::cout << angle * 180/pi << std::endl;
+	std::cout << angle  << std::endl;
         return direction;
     }
     else if(ball.getPosition().y <= 1)
     {
         direction *= -1;
+	angle -= 90;
         return direction;
     }
     else if (ball.getPosition().y >= 580)
 	  {
 	    direction *= -1;
+	    angle -= 90;
 	    return direction;
 	  }
 	    
