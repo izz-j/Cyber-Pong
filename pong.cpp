@@ -161,17 +161,17 @@ int ball_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf:
     }
     
     else if(ball.getPosition().y < 1)
-    {
+      {
 	blip.play();
 	angle -= 90;
 	direction *= -1;
 	//	std::cout << angle << std::endl;
 	return direction;
-    }
-    else if (ball.getPosition().y  > 580)
-	{
-	      blip.play();
-	      angle -= 90;
+      }
+    else if (ball.getPosition().y >= 580)
+	  {
+	      //direction *= -1;
+	    angle -= 90;
 	    direction *= -1;
 	    //std::cout << angle  << std::endl;
 	    return direction;
@@ -188,12 +188,13 @@ void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle, int& d
 	elapsed2 = 15.f;
     float aiSpeed = aiDistance/elapsed2;
 	    if ( rightPaddle.getPosition().y < ball.getPosition().y)
-		{
+	      {
 		    rightPaddle.move(0, aiSpeed);
 		    if (rightPaddle.getPosition().y <  0)
 			{
 			    rightPaddle.setPosition(760, 0);
 			}
+		    rightPaddle.move(0, aiSpeed);
 		}
 	    else if (rightPaddle.getPosition().y  > ball.getPosition().y)
 		{
