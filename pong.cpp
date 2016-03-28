@@ -8,7 +8,7 @@
 
   float pi = 3.1415;
 void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle, sf::Sound& blip);
-int paddle_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& blip);
+int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& blip);
 void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle,  int& direction, sf::Clock& clock, const int& gameHeight); 
 
 int main()
@@ -21,11 +21,12 @@ int direction = -1;
   sf::RenderWindow window(sf::VideoMode(gameWidth, gameHeight), "Pong!");
   window.setFramerateLimit(65);
   //Create left paddle (player's paddle)
-  sf::RectangleShape leftPaddle(sf::Vector2f(20, 100));
+   const int paddleSizeY = 100;
+  sf::RectangleShape leftPaddle(sf::Vector2f(20, paddleSizeY));
     leftPaddle.setFillColor(sf::Color::Green);
     leftPaddle.setPosition(20, 200);
     //Create right paddle (AI)
-    sf::RectangleShape rightPaddle(sf::Vector2f(20, 100));
+    sf::RectangleShape rightPaddle(sf::Vector2f(20, paddleSizeY));
     rightPaddle.setFillColor(sf::Color::Green);
     rightPaddle.setPosition(760, 200);
     //Create the ball
@@ -66,7 +67,7 @@ int direction = -1;
       }
 	//Ball Physics
 	ball_traits(ball, leftPaddle, rightPaddle, direction, clock, angle, blip);
-	paddle_collision(ball, leftPaddle, rightPaddle, direction, angle, blip);
+	paddle_collision(paddleSizeY, ball, leftPaddle, rightPaddle, direction, angle, blip);
 	ai_paddle(ball, rightPaddle,  direction, clock, gameHeight);
 	//std::cout << ball.getPosition().y << std::endl;
 	//clear
@@ -144,67 +145,82 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 	 }
 }
 
-int paddle_collision(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& blip)
+int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& blip)
 {
-    //will decide whether angle is pos or neg
-    int b = (rand() % 2 + 1);
-    if (b == 1)
+    if (ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
 	{
-		b = -1;
+	    blip.play();
+	    direction = 1;
+	    //std::cout << ball.getPosition().y << std::endl;
+	    if (ball.getPosition().y < leftPaddle.getPosition().y + 50)
+		{
+		    //std::cout << "Hitting the top left" << std::endl;
+		    angle = (rand() % 35 + 30);
+		    angle = -angle;
+		}
+	    else if (ball.getPosition().y >  leftPaddle.getPosition().y + 50)
+		{
+		    //std::cout << "hitting the bottom left" << std::endl;
+		    angle = (rand() % 35  + 30);
+		}
+	    /* else if (ball.getPosition().y >= leftPaddle.getPosition().y && ball.getPosition().y < leftPaddle.getPosition().y + 40)
+		{
+		    std::cout << "hitting the left middle" << std::endl;
+		    angle = 0;
+		    }
+		    return direction;*/
 	}
-    else if (b == 2)
+    else if (ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
 	{
-		b = 1;
+	    blip.play();
+	    direction = -1;
+	    if (ball.getPosition().y >= rightPaddle.getPosition().y && ball.getPosition().y < rightPaddle.getPosition().y + 50)
+		{
+		    //  std::cout << "hitting the top right" << std::endl;
+		    angle = (rand() % 35 + 30); 
+		    angle = -angle;
+		}
+	    else if (ball.getPosition().y <= rightPaddle.getPosition().y && ball.getPosition().y > rightPaddle.getPosition().y + 50)
+		{
+		    //std::cout << "hitting the bottom right" << std::endl;
+		    angle = (rand() % 35 + 30);
+		}
+	    else
+		{
+		    //std::cout << "hitting right middle" << std::endl;
+		    angle = 0;
+		}
+		    return direction;
 	}
-    if(ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
-    {
-	blip.play();
-        direction = 1;
-	angle = (rand() % 35 + 30);
-	angle *= b;
-	return direction;
-	//std::cout << angle << std::endl;
-    }
-    else if(ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
-    {
-	blip.play();
-        direction = -1;
-	angle = (rand() % 35 + 30);
-	angle *= b;
-	return direction;
-	//std::cout << angle  << std::endl;
-    }
     else
 	return direction;
 }
 void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, const int& gameHeight)
 {
-    float aiDistance = 30;
+    float aiDistance = 40;
     float elapsed2 = clock.getElapsedTime().asSeconds();
     //cap ai speed
-    if ( elapsed2 == 15.f)
-	elapsed2 = 15.f;
+    if ( elapsed2 == 5.f)
+	elapsed2 = 5.f;
     float aiSpeed = aiDistance/elapsed2;
+    //Keep paddle  from going to far up
 	    if ( rightPaddle.getPosition().y < ball.getPosition().y)
 	      {
 		    rightPaddle.move(0, aiSpeed);
-		    if (rightPaddle.getPosition().y <  0.f)
+		    if (rightPaddle.getPosition().y <= 0.f)
 			{
 			    rightPaddle.setPosition(760, 0);
 			}
-		    rightPaddle.move(0, aiSpeed);
 		}
-	    else if (rightPaddle.getPosition().y  > ball.getPosition().y)
+	    //Keep paddle from going to far down
+	    if (rightPaddle.getPosition().y  > ball.getPosition().y)
 		{
 		    rightPaddle.move(0, -aiSpeed);
-		    if (rightPaddle.getPosition().y > 580.f)
+		    if (rightPaddle.getPosition().y >= 500.f)
 			{
-			    rightPaddle.setPosition(760, 580.f);
+			    rightPaddle.setPosition(760, 499);
 			}
 		}
-	    else
-		{
-		    rightPaddle.setPosition(760, 200);
-		}
-	    //std::cout << rightPaddle.getPosition().y << std::endl;	
+	 
+	    std::cout << rightPaddle.getPosition().y << std::endl;	
 }
