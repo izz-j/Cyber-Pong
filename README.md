@@ -1,6 +1,11 @@
 # Cyber-Pong
-My first pong game! Should be a fun learning experience using SFML
+My first pong game using SFML. This program is still being worked on and not officially released.
+INSTALL
+Make sure you have SFML version 2.3 or later
+if using Arch linux grab package from official repo
+pacman -S sfml
 To compile with gnu makefile:
 pong: pong.cpp
 	g++ -c pong.cpp
 	g++ pong.o -o pong -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+tested on linux. May take some configuring to make it work on windows until official support .
