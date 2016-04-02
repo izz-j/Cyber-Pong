@@ -137,7 +137,7 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
 		   leftPaddle.setPosition(20, 200);
 		   rightPaddle.setPosition(760,  200);
 		   angle = 0;
-		   direction = 1;
+		   direction *= -1;
 		   clock.restart();
 		   stop = false;
 		 }
