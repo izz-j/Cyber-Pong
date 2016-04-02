@@ -152,43 +152,45 @@ int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::Recta
 	    blip.play();
 	    direction = 1;
 	    //std::cout << ball.getPosition().y << std::endl;
-	    if (ball.getPosition().y < leftPaddle.getPosition().y + 50)
+	    if (ball.getPosition().y < leftPaddle.getPosition().y + 30)
 		{
-		    //std::cout << "Hitting the top left" << std::endl;
+		    std::cout << "Hitting the top left" << std::endl;
 		    angle = (rand() % 35 + 30);
 		    angle = -angle;
 		}
-	    else if (ball.getPosition().y >  leftPaddle.getPosition().y + 50)
+	    else if (ball.getPosition().y >  leftPaddle.getPosition().y + 30 && ball.getPosition().y < leftPaddle.getPosition().y + 50)
 		{
-		    //std::cout << "hitting the bottom left" << std::endl;
-		    angle = (rand() % 35  + 30);
-		}
-	    /* else if (ball.getPosition().y >= leftPaddle.getPosition().y && ball.getPosition().y < leftPaddle.getPosition().y + 40)
-		{
-		    std::cout << "hitting the left middle" << std::endl;
+		    std::cout << "hitting left middle" << std::endl;
 		    angle = 0;
+		}
+	    else if (ball.getPosition().y >  leftPaddle.getPosition().y  + 50)
+		{
+		    std::cout << "hitting left bottom" << std::endl;
+		    angle = (rand() % 35 + 30);
+		    angle = angle;
 		    }
-		    return direction;*/
+		    return direction;
 	}
     else if (ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
 	{
 	    blip.play();
 	    direction = -1;
-	    if (ball.getPosition().y >= rightPaddle.getPosition().y && ball.getPosition().y < rightPaddle.getPosition().y + 50)
+	    if (ball.getPosition().y < rightPaddle.getPosition().y + 30)
 		{
-		    //  std::cout << "hitting the top right" << std::endl;
+		    std::cout << "hitting the top right" << std::endl;
 		    angle = (rand() % 35 + 30); 
 		    angle = -angle;
 		}
-	    else if (ball.getPosition().y <= rightPaddle.getPosition().y && ball.getPosition().y > rightPaddle.getPosition().y + 50)
+	    else if (ball.getPosition().y >  rightPaddle.getPosition().y + 30 && rightPaddle.getPosition().y < rightPaddle.getPosition().y + 50)
 		{
-		    //std::cout << "hitting the bottom right" << std::endl;
-		    angle = (rand() % 35 + 30);
-		}
-	    else
-		{
-		    //std::cout << "hitting right middle" << std::endl;
+		    std::cout << "right paddle middle" << std::endl;
 		    angle = 0;
+		}
+	    else if (ball.getPosition().y > rightPaddle.getPosition().y + 50)
+		{
+		    std::cout << "hitting right bottom" << std::endl;
+		    angle = (rand() % 35 + 30);
+		    angle = angle;
 		}
 		    return direction;
 	}
@@ -222,5 +224,5 @@ void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle, int& d
 			}
 		}
 	 
-	    std::cout << rightPaddle.getPosition().y << std::endl;	
+	    //  std::cout << rightPaddle.getPosition().y << std::endl;	
 }
