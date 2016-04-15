@@ -46,7 +46,7 @@ int direction = -1;
      float angle = 0;
      //load sound
      sf::SoundBuffer blipBuffer;
-     if (!blipBuffer.loadFromFile("C:/Users/mitem9106/Documents/GitHub/audio/pongblip.wav"))
+     if (!blipBuffer.loadFromFile("audio/pongblip.wav"))
         return -1;
      sf::Sound blip;
      blip.setBuffer(blipBuffer);
@@ -54,7 +54,7 @@ int direction = -1;
 
     //Load font
     sf::Font font;
-    if(!font.loadFromFile("C:/Users/mitem9106/Documents/GitHub/font/HATTEN.TTF"))
+    if(!font.loadFromFile("fonts/half_bold_pixel-7.ttf"))
         return -1;
     //creating text objects and giving them parameters
     sf::Text textLeft;
@@ -107,9 +107,11 @@ int direction = -1;
 	//draw
         window.draw(leftPaddle);
 	window.draw(rightPaddle);
-	window.draw(ball);
 	window.draw(textLeft);
 	window.draw(textRight);
+	window.draw(ball);
+	//window.draw(textLeft);
+	//window.draw(textRight);
 	window.draw(line);
         window.display();
     }
