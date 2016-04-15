@@ -115,8 +115,8 @@ int direction = -1;
 	window.draw(rightPaddle);
 	window.draw(textLeft);
 	window.draw(textRight);
-	window.draw(ball);
 	window.draw(line);
+	window.draw(ball);
         window.display();
     }
 
