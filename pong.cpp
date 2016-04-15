@@ -7,8 +7,8 @@
 #include <SFML/Audio.hpp> //for sound
 
   float pi = 3.1415;
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle, sf::Sound& blip, int& scoreLeft, int& scoreRight, std::string& left, std::string& right, sf::Text& textLeft, sf::Text& textRight);
-int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& blip);
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle, sf::Sound& wallSound, int& scoreLeft, int& scoreRight, std::string& left, std::string& right, sf::Text& textLeft, sf::Text& textRight);
+int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& paddleSound);
 void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle,  int& direction, sf::Clock& clock, const int& gameHeight);
 
 int main()
@@ -46,11 +46,15 @@ int direction = -1;
      float angle = 0;
      //load sound
      sf::SoundBuffer blipBuffer;
+     sf::SoundBuffer blip2Buffer;
      if (!blipBuffer.loadFromFile("audio/pongblip.wav"))
         return -1;
-     sf::Sound blip;
-     blip.setBuffer(blipBuffer);
-    //This is the game loop gameplay goes in here
+     if (!blip2Buffer.loadFromFile("audio/wallsound.wav"))
+	 return -1;
+     sf::Sound paddleSound;
+     sf::Sound wallSound;
+     paddleSound.setBuffer(blipBuffer);
+     wallSound.setBuffer(blip2Buffer);
 
     //Load font
     sf::Font font;
@@ -98,9 +102,9 @@ int direction = -1;
 	leftPaddle.move(0, 10);
       }
 	//Ball Physics
-	ball_traits(ball, leftPaddle, rightPaddle, direction, clock, angle, blip, scoreLeft, scoreRight, left, right, textLeft, textRight);
+	ball_traits(ball, leftPaddle, rightPaddle, direction, clock, angle, wallSound, scoreLeft, scoreRight, left, right, textLeft, textRight);
 	//Paddle collisions
-	paddle_collision(paddleSizeY, ball, leftPaddle, rightPaddle, direction, angle, blip);
+	paddle_collision(paddleSizeY, ball, leftPaddle, rightPaddle, direction, angle, paddleSound);
 	//AI
 	ai_paddle(ball, rightPaddle,  direction, clock, gameHeight);
 	//std::cout << ball.getPosition().y << std::endl;
@@ -112,15 +116,13 @@ int direction = -1;
 	window.draw(textLeft);
 	window.draw(textRight);
 	window.draw(ball);
-	//window.draw(textLeft);
-	//window.draw(textRight);
 	window.draw(line);
         window.display();
     }
 
     return 0;
 }
-void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle, sf::Sound& blip, int& scoreLeft, int& scoreRight, std::string& left, std::string& right, sf::Text& textLeft, sf::Text& textRight)
+void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle, sf::Sound& wallSound, int& scoreLeft, int& scoreRight, std::string& left, std::string& right, sf::Text& textLeft, sf::Text& textRight)
 {
   //So my error was I had to add asSeconds() to make the ball go faster
 
@@ -154,13 +156,13 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
   //top and bottom collisions
   if (ball.getPosition().y < 2.f)
   {
-      blip.play();
+      wallSound.play();
       angle = -angle;
       ball.move(moveX, -moveY * elapsed);
   }
   else if (ball.getPosition().y > 578.f)
 	{
-	    blip.play();
+	    wallSound.play();
 	    angle = -angle;
 	    ball.move(moveX, -moveY * elapsed);
 	}
@@ -240,11 +242,11 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
   
 }
 
-int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& blip)
+int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& paddleSound)
 {
     if (ball.getGlobalBounds().intersects(leftPaddle.getGlobalBounds()))
     {
-	blip.play();
+	paddleSound.play();
 	direction = 1;
 	    //std::cout << ball.getPosition().y << std::endl;
 	if (ball.getPosition().y < leftPaddle.getPosition().y + 30)
@@ -263,27 +265,27 @@ int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::Recta
 	    //std::cout << "hitting left bottom" << std::endl;
 	    angle = (rand() % 35 + 30);
 	    angle = angle;
-		    }
+	}
 	return direction;
     }
     else if (ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()))
     {
-	blip.play();
+	paddleSound.play();
 	    direction = -1;
 	    if (ball.getPosition().y < rightPaddle.getPosition().y + 30)
 	    {
-		std::cout << "hitting the top right" << std::endl;
+		//std::cout << "hitting the top right" << std::endl;
 		angle = (rand() % 35 + 30);
 		angle = -angle;
 	    }
-	    else if (ball.getPosition().y >  rightPaddle.getPosition().y + 30 && rightPaddle.getPosition().y < rightPaddle.getPosition().y + 50)
+	    else if (ball.getPosition().y >  rightPaddle.getPosition().y + 30 && ball.getPosition().y < rightPaddle.getPosition().y + 50)
 	    {
-		std::cout << "right paddle middle" << std::endl;
+		//std::cout << "right paddle middle" << std::endl;
 		angle = 0;
 	    }
 	    else if (ball.getPosition().y > rightPaddle.getPosition().y + 50)
 		{
-		    std::cout << "hitting right bottom" << std::endl;
+		    //std::cout << "hitting right bottom" << std::endl;
 		    angle = (rand() % 35 + 30);
 		    angle = angle;
 		}
@@ -322,5 +324,5 @@ void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle, int& d
 	    rightPaddle.move(0, aiSpeed);
     }
 
-	      std::cout << rightPaddle.getPosition().y << std::endl;
+    // std::cout << rightPaddle.getPosition().y << std::endl;
 }
