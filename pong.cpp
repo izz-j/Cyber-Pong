@@ -6,7 +6,6 @@
 #include <SFML/Graphics.hpp>//for graphics
 #include <SFML/Audio.hpp> //for sound
 
-float pi = 3.1415;
 void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, sf::Clock& clock, float& angle, sf::Sound& wallSound, int& scoreLeft, int& scoreRight, std::string& left, std::string& right, sf::Text& textLeft, sf::Text& textRight);
 int paddle_collision(const int& paddleSizeY, sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::RectangleShape& rightPaddle, int& direction, float& angle, sf::Sound& paddleSound);
 void ai_paddle(sf::RectangleShape& ball, sf::RectangleShape& rightPaddle,  int& direction, sf::Clock& clock, const int& gameHeight);
@@ -141,8 +140,8 @@ void ball_traits(sf::RectangleShape& ball, sf::RectangleShape& leftPaddle, sf::R
     char temp;
     float elapsed= clock.getElapsedTime().asSeconds();
     float ballSpeed = 1;
-    float scaleX = cos(angle * pi/180);
-    float scaleY = sin(angle * pi/180);
+    float scaleX = cos(angle * M_PI/180);
+    float scaleY = sin(angle * M_PI/180);
     // std::cout << angle << std::endl;
     float velocityX = scaleX * ballSpeed;
     float velocityY = scaleY * ballSpeed;
