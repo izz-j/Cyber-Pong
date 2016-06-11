@@ -8,9 +8,10 @@ if using Arch linux grab package from official repo
 pacman -S sfml
 
 To compile with gnu makefile on linux:
-pong: pong.cpp
 
-      g++ pong.o -o pong -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+   	   pong: pong.cpp
+
+			g++ pong.o -o pong -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 tested on linux. May take some configuring to make it work on windows until official support .
 
 HOW TO CONTRIBUTE
