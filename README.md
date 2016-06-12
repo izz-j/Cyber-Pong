@@ -6,7 +6,7 @@ officially released.
 
 Make sure you have SFML version 2.3 or later. You can learn about downloading
 SFML for Linux in [that project's
-documentation](http://www.sfml-dev.org/tutorials/2.3/start-linux.php)
+documentation](http://www.sfml-dev.org/tutorials/2.3/start-linux.php).
 
 If you're using Arch Linux, you can grab the package from the official repo:
     
@@ -23,6 +23,6 @@ Windows until official support is added.
 
 #HOW TO CONTRIBUTE
 
-Do not add anything that has not been tested to the Master branch. All changes
-must be added to the test or other branches. Once it is reviewed and approved,
-then it can be added to the master branch.
+Do not add anything that has not been tested to the `release` branch. All changes
+must be added to `dev` or other branches. Once it is reviewed and approved,
+then it can be added to the `release` branch.
