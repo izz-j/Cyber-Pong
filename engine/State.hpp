@@ -1,7 +1,7 @@
 #ifndef STATE_HPP
 #define STATE_HPP
 
-#include <SFML/Graphics>
+#include <SFML/Graphics.hpp> 
 
 class State
 {
