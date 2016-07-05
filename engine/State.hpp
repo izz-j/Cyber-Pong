@@ -2,13 +2,16 @@
 #define STATE_HPP
 
 #include <SFML/Graphics.hpp> 
-
+#include <string>
 class State
 {
 public:
 
     State() : created(true){}
     ~State();
+
+    //Set State ID
+    virtual std::string SetID();
     //Setup State
     virtual void Setup();
     //Update state using time
