@@ -4,9 +4,10 @@
 #include "State.hpp"
 #include <vector>
 #include <string>
+#include <map>
 
 
-class StateManager
+class StateManager : public State
 {
 public:
     StateManager();
@@ -24,14 +25,15 @@ public:
   
     
 private:
-    //String ID
-    std::string id;
     //Time until switch flag
     bool ready;
-    //All states will be added to this vector
-    std::vector<State*> addedStates;
+    //Make a map of state pointers and string key values
+    typedef std::map<State*, std::string> StateMap;
+    
+    //All states will be added to this map
+    StateMap addedStates;
     //All states will be removed from StatesAdded
     //To removed States
-    std::vector<State*> removedStates
+    StateMap removedStates;
 };
 #endif
