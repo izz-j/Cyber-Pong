@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <utility> 
 
 
 class StateManager : public State
@@ -27,6 +28,9 @@ public:
 private:
     //Time until switch flag
     bool ready;
+    //string id
+    std::string id;
+    
     //Make a map of state pointers and string key values
     typedef std::map<State*, std::string> StateMap;
     
