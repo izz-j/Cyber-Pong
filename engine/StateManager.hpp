@@ -16,28 +16,31 @@ public:
 
      //This will track the state
     //shhould be helpful for debug purposes
-    std::string GetID(State currentState);
+    void  StampID(State& currentState);
     //Add State
     void AddState(State& currentState);
     //Switch State
     void SwitchState(State& currentState);
     //Remove State
-    void RemoveState(State& currentState);
+    void RemoveState();
   
     
 private:
     //Time until switch flag
     bool ready;
     //string id
-    std::string id;
+    int indexId = 1;
+    int id;
     
     //Make a map of state pointers and string key values
     typedef std::map<State*, std::string> StateMap;
-    
+    //iterator
+    std::map<State*, std::string>::iterator itr;
+
     //All states will be added to this map
-    StateMap addedStates;
-    //All states will be removed from StatesAdded
-    //To removed States
-    StateMap removedStates;
+    StateMap activeState;
+    
+    //May not serve a purpose anymore....
+    StateMap deactiveStates;
 };
 #endif
