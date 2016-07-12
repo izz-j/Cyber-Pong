@@ -11,7 +11,9 @@ public:
     ~State();
 
     //Set State ID
-    virtual std::string SetID();
+    virtual void SetID();
+    //Get State ID
+    virtual int GetID();
     //Setup State
     virtual void Setup();
     //Update state using time
