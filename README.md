@@ -1,6 +1,6 @@
 # Cyber-Pong
 
-![Cyber-Pong Preview](https://www.github.com/izz-j/Cyber-Pong/pong1.gif)
+![](http://www.github.com/izz-j/Cyber-Pong/pong1.gif)
 My first pong game using SFML. This program is still being worked on and is not
 officially released.
 
