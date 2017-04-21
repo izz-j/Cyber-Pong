@@ -1,6 +1,6 @@
 # Cyber-Pong
 
-![](http://imgur.com/a/B2Heh)
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/B2Heh"><a href="//imgur.com/B2Heh"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
 
 My first pong game using SFML. This program is still being worked on and is not
 officially released.
