@@ -15,13 +15,19 @@ If you're using Arch Linux, you can grab the package from the official repo:
     
     pacman -S sfml
 
+You can run the pong binary
+
+`./pong`
+
+OR
+
 ##Compiling Cyber-Pong
 After cloning this repo, compile with g++ on Linux:
 
     g++ -c pong.cpp
     g++ pong.o -o pong -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
-Cyber-Pong is tested on Linux. It may take some configuring to make it work on
+Cyber-Pong is tested on Linux.It may take some configuring to make it work on
 Windows until official support is added.
 
 #HOW TO CONTRIBUTE
@@ -29,3 +35,4 @@ Windows until official support is added.
 Do not add anything that has not been tested to the `release` branch. All changes
 must be added to `dev` or other branches. Once it is reviewed and approved,
 then it can be added to the `release` branch.
+
